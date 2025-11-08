@@ -15,9 +15,6 @@
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
@@ -25,8 +22,9 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            max-width: 1000px;
+            max-width: 1400px;
             width: 100%;
+            margin: 0 auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
@@ -44,18 +42,92 @@
             font-size: 1.1em;
         }
 
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
+        }
+
         .ear-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
-            margin: 0 auto 30px;
+            overflow: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            max-height: 450px;
+            cursor: grab;
+        }
+
+        .ear-container:active {
+            cursor: grabbing;
+        }
+
+        .ear-image-wrapper {
+            position: relative;
+            width: 100%;
+            transition: transform 0.1s ease-out;
+            transform-origin: center center;
         }
 
         .ear-image {
             width: 100%;
             height: auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            user-select: none;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .zoom-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .zoom-btn:active {
+            transform: scale(0.95);
+        }
+
+        .zoom-info {
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 0.9em;
+            color: #333;
+            font-weight: bold;
         }
 
         .sound-wave {
@@ -103,13 +175,17 @@
             }
         }
 
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         .station-info {
             background: #f8f9fa;
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
             border-left: 5px solid #667eea;
-            min-height: 120px;
         }
 
         .station-info h2 {
@@ -124,11 +200,46 @@
             font-size: 1.1em;
         }
 
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+        }
+
+        .warning-box h3 {
+            color: #dc3545;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning-box p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+
+        .warning-box ul {
+            margin-top: 10px;
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .warning-box li {
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
         .quiz-container {
             background: #fff3cd;
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
             border-left: 5px solid #ffc107;
             display: none;
         }
@@ -267,6 +378,9 @@
             text-align: center;
             padding: 40px;
             display: none;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 20px;
         }
 
         .finale h2 {
@@ -300,6 +414,16 @@
                 width: 30px;
                 height: 30px;
             }
+
+            .ear-container {
+                max-height: 350px;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .ear-container {
+                max-height: 500px;
+            }
         }
     </style>
 </head>
@@ -312,20 +436,33 @@
             <div class="progress-fill" id="progressBar"></div>
         </div>
 
-        <div class="ear-container">
-            <img src="Ohr_jetzt.png" alt="Anatomie des menschlichen Ohrs" class="ear-image">
-            <div class="sound-wave" id="soundWave"></div>
-        </div>
+        <div class="main-content">
+            <div class="ear-container" id="earContainer">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()" title="Vergrößern">+</button>
+                    <div class="zoom-info" id="zoomInfo">100%</div>
+                    <button class="zoom-btn" onclick="zoomOut()" title="Verkleinern">−</button>
+                    <button class="zoom-btn" onclick="resetZoom()" title="Zurücksetzen">⟲</button>
+                </div>
+                <div class="ear-image-wrapper" id="imageWrapper">
+                    <img src="Ohr_jetzt.png" alt="Anatomie des menschlichen Ohrs" class="ear-image" id="earImage">
+                    <div class="sound-wave" id="soundWave"></div>
+                </div>
+            </div>
 
-        <div class="station-info" id="stationInfo">
-            <h2 id="stationTitle">Willkommen!</h2>
-            <p id="stationText">Klicke auf "Start", um die Reise zu beginnen!</p>
-        </div>
+            <div class="content-area">
+                <div class="station-info" id="stationInfo">
+                    <h2 id="stationTitle">Willkommen!</h2>
+                    <p id="stationText">Klicke auf "Start", um die Reise zu beginnen!</p>
+                    <div id="warningBox"></div>
+                </div>
 
-        <div class="quiz-container" id="quizContainer">
-            <h3 id="quizQuestion"></h3>
-            <div class="quiz-options" id="quizOptions"></div>
-            <div class="feedback" id="feedback"></div>
+                <div class="quiz-container" id="quizContainer">
+                    <h3 id="quizQuestion"></h3>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            </div>
         </div>
 
         <div class="finale" id="finale">
@@ -362,8 +499,8 @@
                 quiz: {
                     question: "Was ist die Hauptaufgabe der Ohrmuschel?",
                     options: [
-                        { text: "Schall verstärken", correct: false },
                         { text: "Schall auffangen und weiterleiten", correct: true },
+                        { text: "Schall verstärken", correct: false },
                         { text: "Schall in Nervenimpulse umwandeln", correct: false }
                     ]
                 }
@@ -378,18 +515,44 @@
                 title: "Station 4: Das Trommelfell",
                 text: "Die Schallwelle trifft auf das dünne Trommelfell und bringt es zum Schwingen! Das Trommelfell ist die Grenze zwischen äußerem Ohr und Mittelohr.",
                 position: { top: "55%", left: "30%" },
-                quiz: null
+                warning: {
+                    title: "⚠️ Achtung: Trommelfell in Gefahr!",
+                    content: "Das Trommelfell ist nur etwa 0,1 mm dünn und sehr empfindlich! Bei plötzlichem starkem Überdruck kann es reißen (Trommelfellruptur).",
+                    points: [
+                        "Explosionen und Detonationen können das Trommelfell beschädigen",
+                        "Auch ein Schlag aufs Ohr oder plötzlicher Druckausgleich (z.B. Tauchen) kann gefährlich sein",
+                        "Eine Trommelfellruptur kann zu Hörverlust und Schmerzen führen"
+                    ]
+                },
+                quiz: {
+                    question: "Was kann das empfindliche Trommelfell schädigen?",
+                    options: [
+                        { text: "Normale Alltagsgeräusche", correct: false },
+                        { text: "Nur sehr laute Dauergeräusche", correct: false },
+                        { text: "Plötzlicher starker Überdruck (z.B. Explosionen)", correct: true }
+                    ]
+                }
             },
             {
                 title: "Station 5: Die drei Gehörknöchelchen",
                 text: "Die drei kleinsten Knochen des menschlichen Körpers - Hammer, Amboss und Steigbügel - nehmen die Schwingung auf, verstärken sie und geben sie weiter!",
                 position: { top: "40%", left: "42%" },
+                warning: {
+                    title: "⚠️ Lärmschutz am Arbeitsplatz!",
+                    content: "Dauerhafter Lärm über 85 dB kann zu bleibenden Hörschäden führen! Die Gehörknöchelchen können durch ständige Überbelastung geschädigt werden.",
+                    points: [
+                        "Ab 85 dB: Gehörschutz ist Pflicht (z.B. Baustellen, Fabriken)",
+                        "Bei Konzerten oder in Diskotheken: oft 100-110 dB!",
+                        "Motorsägen, Presslufthammer: bis 120 dB",
+                        "Schütze dein Gehör mit Ohrstöpseln oder Kapselgehörschutz!"
+                    ]
+                },
                 quiz: {
-                    question: "Wie heißen die drei Gehörknöchelchen?",
+                    question: "Ab welcher Lautstärke ist Gehörschutz am Arbeitsplatz Pflicht?",
                     options: [
-                        { text: "Hammer, Meißel, Zange", correct: false },
-                        { text: "Hammer, Amboss, Steigbügel", correct: true },
-                        { text: "Amboss, Zange, Steigbügel", correct: false }
+                        { text: "Ab 85 dB (z.B. Baustellen, laute Maschinen)", correct: true },
+                        { text: "Erst ab 120 dB (Schmerzgrenze)", correct: false },
+                        { text: "Ab 65 dB (normale Unterhaltung)", correct: false }
                     ]
                 }
             },
@@ -397,18 +560,62 @@
                 title: "Station 6: Die Hörschnecke (Cochlea)",
                 text: "Durch das ovale Fenster gelangt die Schwingung in die spiralförmige Hörschnecke. Hier werden die mechanischen Schwingungen in elektrische Nervensignale umgewandelt!",
                 position: { top: "45%", left: "62%" },
-                quiz: null
+                warning: {
+                    title: "⚠️ Vorsicht: Haarzellen in Gefahr!",
+                    content: "In der Hörschnecke befinden sich etwa 15.000 winzige Haarzellen, die für unser Hören verantwortlich sind. Sie können durch zu laute Musik unwiederbringlich zerstört werden!",
+                    points: [
+                        "Zerstörte Haarzellen können sich NICHT regenerieren!",
+                        "Zu laute Musik über Kopfhörer ist besonders gefährlich",
+                        "Nach lauten Konzerten oder Discobesuchen: Ohren brauchen Ruhe!",
+                        "Tinnitus (Ohrgeräusche) kann ein Warnsignal sein",
+                        "60-60-Regel: Max. 60% Lautstärke für max. 60 Minuten am Stück"
+                    ]
+                },
+                quiz: {
+                    question: "Was passiert mit den Haarzellen in der Hörschnecke, wenn sie durch zu laute Musik geschädigt wurden?",
+                    options: [
+                        { text: "Sie wachsen nach ein paar Tagen nach", correct: false },
+                        { text: "Sie erholen sich nach einer Ruhepause vollständig", correct: false },
+                        { text: "Sie sind unwiederbringlich zerstört", correct: true }
+                    ]
+                }
             },
             {
                 title: "Station 7: Der Hörnerv und das Gehirn",
                 text: "Der Hörnerv leitet die elektrischen Signale ins Gehirn weiter. Erst dort werden sie als Töne, Geräusche oder Musik wahrgenommen!",
                 position: { top: "40%", left: "75%" },
                 quiz: null
+            },
+            {
+                title: "Station 8: Alltagscheck - Du bist jetzt der Experte!",
+                text: "Du hast jetzt gelernt, wie wertvoll und empfindlich dein Gehör ist. Jetzt eine Frage aus dem Alltag:",
+                position: { top: "45%", left: "50%" },
+                warning: {
+                    title: "💡 Gut zu wissen: In-Ear-Kopfhörer",
+                    content: "In-Ear-Kopfhörer (Earbuds, AirPods etc.) sitzen direkt im Gehörgang - viel näher am Trommelfell als normale Kopfhörer!",
+                    points: [
+                        "Der Schall muss nicht erst durch die Luft - er geht direkt aufs Trommelfell",
+                        "Dadurch wirkt die Musik lauter und intensiver auf dein Ohr",
+                        "Viele drehen die Lautstärke hoch, um Außengeräusche zu übertönen",
+                        "Praktische Tipps: 60-60-Regel (max. 60% Lautstärke, max. 60 Min. am Stück), regelmäßig Pausen machen, Over-Ear-Kopfhörer sind schonender"
+                    ]
+                },
+                quiz: {
+                    question: "Dein Kumpel/Deine Freundin hört auf dem ganzen Schulweg Musik mit In-Ear-Kopfhörern auf voller Lautstärke. Du kannst die Musik sogar neben ihm/ihr hören. Was denkst du?",
+                    options: [
+                        { text: "Ich schreie: 'Bist du verrückt? Du wirst taub!'", correct: false },
+                        { text: "Ich erkläre ihm, dass die laute Musik sein Gehör schädigt. Wenn er will erkläre ich ihm das mit den Haarzellen.", correct: true },
+                        { text: "Das ist seine/ihre Sache, ich mische mich nicht ein", correct: false }
+                    ]
+                }
             }
         ];
 
         let currentStation = -1;
         let quizAnswered = false;
+        let currentZoom = 1;
+        let isDragging = false;
+        let startX, startY, scrollLeft, scrollTop;
 
         function nextStation() {
             if (currentStation >= 0 && stations[currentStation].quiz && !quizAnswered) {
@@ -433,6 +640,7 @@
             const quizContainer = document.getElementById('quizContainer');
             const nextBtn = document.getElementById('nextBtn');
             const progressBar = document.getElementById('progressBar');
+            const warningBox = document.getElementById('warningBox');
 
             // Update progress bar
             const progress = ((index + 1) / stations.length) * 100;
@@ -442,6 +650,27 @@
             document.getElementById('stationTitle').textContent = station.title;
             document.getElementById('stationText').textContent = station.text;
             stationInfo.style.display = 'block';
+
+            // Show warning box if available
+            if (station.warning) {
+                let pointsList = '';
+                if (station.warning.points) {
+                    pointsList = '<ul>';
+                    station.warning.points.forEach(point => {
+                        pointsList += `<li>${point}</li>`;
+                    });
+                    pointsList += '</ul>';
+                }
+                warningBox.innerHTML = `
+                    <div class="warning-box">
+                        <h3>${station.warning.title}</h3>
+                        <p>${station.warning.content}</p>
+                        ${pointsList}
+                    </div>
+                `;
+            } else {
+                warningBox.innerHTML = '';
+            }
 
             // Animate sound wave
             soundWave.style.opacity = '1';
@@ -515,10 +744,8 @@
         }
 
         function showFinale() {
-            document.getElementById('stationInfo').style.display = 'none';
-            document.getElementById('quizContainer').style.display = 'none';
+            document.querySelector('.main-content').style.display = 'none';
             document.querySelector('.navigation').style.display = 'none';
-            document.getElementById('soundWave').style.opacity = '0';
             document.getElementById('finale').style.display = 'block';
         }
 
@@ -527,13 +754,125 @@
             quizAnswered = false;
             document.getElementById('progressBar').style.width = '0%';
             document.getElementById('soundWave').style.opacity = '0';
-            document.getElementById('stationInfo').style.display = 'block';
             document.getElementById('stationTitle').textContent = 'Willkommen!';
             document.getElementById('stationText').textContent = 'Klicke auf "Start", um die Reise zu beginnen!';
+            document.getElementById('warningBox').innerHTML = '';
+            document.querySelector('.main-content').style.display = 'grid';
             document.getElementById('finale').style.display = 'none';
             document.querySelector('.navigation').style.display = 'flex';
             document.getElementById('nextBtn').textContent = 'Start';
+            resetZoom();
         }
+
+        // Zoom-Funktionalität
+        function updateZoom() {
+            const imageWrapper = document.getElementById('imageWrapper');
+            const zoomInfo = document.getElementById('zoomInfo');
+            imageWrapper.style.transform = `scale(${currentZoom})`;
+            zoomInfo.textContent = Math.round(currentZoom * 100) + '%';
+        }
+
+        function zoomIn() {
+            if (currentZoom < 3) {
+                currentZoom += 0.25;
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > 0.5) {
+                currentZoom -= 0.25;
+                updateZoom();
+            }
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            updateZoom();
+            const container = document.getElementById('earContainer');
+            container.scrollTop = 0;
+            container.scrollLeft = 0;
+        }
+
+        // Drag-to-Pan-Funktionalität
+        const earContainer = document.getElementById('earContainer');
+
+        earContainer.addEventListener('mousedown', (e) => {
+            if (currentZoom > 1) {
+                isDragging = true;
+                startX = e.pageX - earContainer.offsetLeft;
+                startY = e.pageY - earContainer.offsetTop;
+                scrollLeft = earContainer.scrollLeft;
+                scrollTop = earContainer.scrollTop;
+            }
+        });
+
+        earContainer.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        earContainer.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        earContainer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - earContainer.offsetLeft;
+            const y = e.pageY - earContainer.offsetTop;
+            const walkX = (x - startX) * 2;
+            const walkY = (y - startY) * 2;
+            earContainer.scrollLeft = scrollLeft - walkX;
+            earContainer.scrollTop = scrollTop - walkY;
+        });
+
+        // Zoom mit Mausrad
+        earContainer.addEventListener('wheel', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            }
+        });
+
+        // Touch-Unterstützung für mobile Geräte
+        let touchStartDistance = 0;
+
+        earContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                touchStartDistance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+            }
+        });
+
+        earContainer.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const touchDistance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+
+                if (touchStartDistance > 0) {
+                    const scale = touchDistance / touchStartDistance;
+                    const newZoom = currentZoom * scale;
+                    if (newZoom >= 0.5 && newZoom <= 3) {
+                        currentZoom = newZoom;
+                        updateZoom();
+                    }
+                    touchStartDistance = touchDistance;
+                }
+            }
+        });
     </script>
 </body>
 </html>
