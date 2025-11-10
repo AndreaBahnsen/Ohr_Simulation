@@ -236,6 +236,83 @@
             line-height: 1.5;
         }
 
+        .special-knowledge-box {
+            background: #e0f7fa;
+            border-left: 5px solid #00acc1;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0, 172, 193, 0.2);
+        }
+
+        .special-knowledge-toggle {
+            background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 1.05em;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .special-knowledge-toggle:hover {
+            background: linear-gradient(135deg, #00838f 0%, #006064 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3);
+        }
+
+        .special-knowledge-toggle .arrow {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+
+        .special-knowledge-toggle.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .special-knowledge-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            margin-top: 0;
+        }
+
+        .special-knowledge-content.active {
+            max-height: 500px;
+            margin-top: 15px;
+        }
+
+        .special-knowledge-content h4 {
+            color: #00838f;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .special-knowledge-content p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+
+        .special-knowledge-content ul {
+            margin-top: 10px;
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .special-knowledge-content li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
         .quiz-container {
             background: #fff3cd;
             padding: 20px;
@@ -537,6 +614,16 @@
                 title: "Station 5: Die drei Gehörknöchelchen",
                 text: "Die drei kleinsten Knochen des menschlichen Körpers - Hammer, Amboss und Steigbügel - nehmen die Schwingung auf, verstärken sie und geben sie weiter!",
                 position: { top: "40%", left: "42%" },
+                specialKnowledge: {
+                    title: "💡 Da war noch was...",
+                    content: "Warum müssen die Gehörknöchelchen die Schallwelle überhaupt verstärken? Die Antwort liegt in der Hörschnecke: Sie ist mit Flüssigkeit gefüllt! Und Schallwellen haben es viel schwerer, Flüssigkeit in Schwingung zu versetzen als Luft.",
+                    points: [
+                        "Das Trommelfell schwingt in der Luft - die Hörschnecke ist aber mit Flüssigkeit gefüllt",
+                        "Ohne Verstärkung würde ein Großteil der Schallenergie beim Übergang von Luft zu Flüssigkeit verloren gehen",
+                        "Die drei Gehörknöchelchen wirken wie ein Hebelsystem und verstärken die Kraft um etwa das 20-fache!",
+                        "Zusätzlich ist das Trommelfell viel größer als das ovale Fenster zur Hörschnecke - das konzentriert die Kraft auf eine kleinere Fläche"
+                    ]
+                },
                 warning: {
                     title: "⚠️ Lärmschutz am Arbeitsplatz!",
                     content: "Dauerhafter Lärm über 85 dB kann zu bleibenden Hörschäden führen! Die Gehörknöchelchen können durch ständige Überbelastung geschädigt werden.",
@@ -560,6 +647,17 @@
                 title: "Station 6: Die Hörschnecke (Cochlea)",
                 text: "Durch das ovale Fenster gelangt die Schwingung in die spiralförmige Hörschnecke. Hier werden die mechanischen Schwingungen in elektrische Nervensignale umgewandelt!",
                 position: { top: "45%", left: "62%" },
+                specialKnowledge: {
+                    title: "🎓 Für Expertinnen und Experten",
+                    content: "In der Hörschnecke geschieht etwas Faszinierendes: Die mechanische Schwingung (Bewegung) wird in ein elektrisches Signal umgewandelt! Dies ist der entscheidende Übergang, damit unser Gehirn den Schall verarbeiten kann.",
+                    points: [
+                        "Die Flüssigkeit in der Hörschnecke wird durch die Gehörknöchelchen in Schwingung versetzt",
+                        "Diese Schwingung bewegt winzige Haarzellen (etwa 15.000 Stück!) im Innenohr",
+                        "Wenn sich die Haarzellen biegen, öffnen sich Ionenkanäle - dadurch entsteht ein elektrisches Signal",
+                        "Verschiedene Bereiche der Hörschnecke reagieren auf verschiedene Tonhöhen: hohe Töne am Anfang, tiefe Töne am Ende der Spirale",
+                        "So wird aus einer mechanischen Welle ein elektrisches Signal, das über den Hörnerv weitergeleitet werden kann"
+                    ]
+                },
                 warning: {
                     title: "⚠️ Vorsicht: Haarzellen in Gefahr!",
                     content: "In der Hörschnecke befinden sich etwa 15.000 winzige Haarzellen, die für unser Hören verantwortlich sind. Sie können durch zu laute Musik unwiederbringlich zerstört werden!",
@@ -584,6 +682,17 @@
                 title: "Station 7: Der Hörnerv und das Gehirn",
                 text: "Der Hörnerv leitet die elektrischen Signale ins Gehirn weiter. Erst dort werden sie als Töne, Geräusche oder Musik wahrgenommen!",
                 position: { top: "40%", left: "75%" },
+                specialKnowledge: {
+                    title: "🔍 Tiefer eintauchen?",
+                    content: "Hier liegt der Schlüssel zum Verständnis: Das eigentliche 'Hören' findet gar nicht im Ohr statt, sondern erst im Gehirn! Das Ohr ist 'nur' der Übersetzer, der Schallwellen in elektrische Signale umwandelt.",
+                    points: [
+                        "Der Hörnerv leitet etwa 30.000 elektrische Nervenfasern vom Ohr zum Gehirn",
+                        "Im Hörzentrum des Gehirns (im Schläfenlappen) werden diese Signale verarbeitet und interpretiert",
+                        "Erst das Gehirn macht aus den elektrischen Impulsen das, was wir als 'Hören' erleben: Sprache, Musik, Vogelgezwitscher...",
+                        "Das Gehirn kann auch 'fehlerhaft hören': Bei Tinnitus produziert das Gehirn Töne, die gar nicht da sind",
+                        "Unser Gehirn filtert ständig unwichtige Geräusche heraus - deshalb können wir uns auf ein Gespräch konzentrieren, auch wenn es laut um uns herum ist (Cocktailparty-Effekt)"
+                    ]
+                },
                 quiz: null
             },
             {
@@ -651,7 +760,33 @@
             document.getElementById('stationText').textContent = station.text;
             stationInfo.style.display = 'block';
 
+            // Show special knowledge box if available
+            let specialKnowledgeHTML = '';
+            if (station.specialKnowledge) {
+                let pointsList = '';
+                if (station.specialKnowledge.points) {
+                    pointsList = '<ul>';
+                    station.specialKnowledge.points.forEach(point => {
+                        pointsList += `<li>${point}</li>`;
+                    });
+                    pointsList += '</ul>';
+                }
+                specialKnowledgeHTML = `
+                    <div class="special-knowledge-box">
+                        <button class="special-knowledge-toggle" onclick="toggleSpecialKnowledge(this)">
+                            <span>${station.specialKnowledge.title}</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div class="special-knowledge-content">
+                            <p>${station.specialKnowledge.content}</p>
+                            ${pointsList}
+                        </div>
+                    </div>
+                `;
+            }
+
             // Show warning box if available
+            let warningHTML = '';
             if (station.warning) {
                 let pointsList = '';
                 if (station.warning.points) {
@@ -661,16 +796,16 @@
                     });
                     pointsList += '</ul>';
                 }
-                warningBox.innerHTML = `
+                warningHTML = `
                     <div class="warning-box">
                         <h3>${station.warning.title}</h3>
                         <p>${station.warning.content}</p>
                         ${pointsList}
                     </div>
                 `;
-            } else {
-                warningBox.innerHTML = '';
             }
+
+            warningBox.innerHTML = specialKnowledgeHTML + warningHTML;
 
             // Animate sound wave
             soundWave.style.opacity = '1';
@@ -873,6 +1008,13 @@
                 }
             }
         });
+
+        // Toggle special knowledge box
+        function toggleSpecialKnowledge(button) {
+            const content = button.nextElementSibling;
+            button.classList.toggle('active');
+            content.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
